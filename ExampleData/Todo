@@ -6,12 +6,6 @@ App:
     State und Event muss noch sinnvoll gehandhabt werden.
 
 
-Python:
-    Daten Zerschneiden:
-        Jede Zeile ist eine Datenstrecke
-        Prüfen ob die Datenstrecke lang genug ist -> 600 Quaternionen.
-
-
 
 
 Datenformat:
