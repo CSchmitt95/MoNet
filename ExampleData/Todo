@@ -1,0 +1,26 @@
+Todo:
+
+App:
+    Sensor hinzufügen UI
+    Bewegung löschen braucht Bestätigungsdialog
+    State und Event muss noch sinnvoll gehandhabt werden.
+
+
+Python:
+    Daten Zerschneiden:
+        Jede Zeile ist eine Datenstrecke
+        Prüfen ob die Datenstrecke lang genug ist -> 600 Quaternionen.
+
+
+
+
+Datenformat:
+    MovementName    (gesuchte Eigenschaft)
+    SensorName      (Wird verwendet zum Sortieren) (netz wird nicht mit dieser Spalte Trainiert.)
+    w0
+    x0
+    y0
+    z0              (Bei Einfachem Netz: 4 * 600 Datenpunkte. Bei Multi-Sensor Netz: #Sensoren * 4 * 600 Datenpunkte)
+    .
+    .
+    .

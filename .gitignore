@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+ExampleData/output
+ExampleData/1
+ExampleData/1/SensorB.csv
