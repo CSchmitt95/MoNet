@@ -7,12 +7,16 @@ import pandas as pd
 from sklearn.datasets import make_multilabel_classification
 from sklearn.model_selection import train_test_split
 
-from scipy.special import softmax
+#from scipy.special import softmax
+from sklearn.metrics import multilabel_confusion_matrix
+
+import matplotlib.pyplot as plt
+from matplotlib import rcParams
 
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 
-df = pd.read_csv("ExampleData/output/SensorA.csv")
+df = pd.read_csv("ExampleData/output/SensorsAB.csv")
     
 
 '''
@@ -37,8 +41,9 @@ n_samples = (df.shape[0] - 1)
 n_features = (df.shape[1] - 1)
 random_state=42
 validation_split = 0.3
-epochs = 200
-
+epochs = 5000
+batch_size = 1000
+learning_rate = 0.01
 
 df['Gehen'] = [
     1 if MovementName == "Gehen" else 0 for MovementName in df['MovementName']
@@ -71,18 +76,15 @@ labels = y_test.columns.values
 tf.random.set_seed(42)
 model = tf.keras.Sequential([
     tf.keras.layers.Dense(1500, activation='relu'),
-    tf.keras.layers.Dense(3000, activation='relu'),
-    tf.keras.layers.Dense(6000, activation='relu'),
-    tf.keras.layers.Dense(3000, activation='relu'),
-    tf.keras.layers.Dense(512, activation='relu'),
-    tf.keras.layers.Dense(256, activation='relu'),
+    tf.keras.layers.Dense(1000, activation='relu'),
+    tf.keras.layers.Dense(500, activation='relu'),
     tf.keras.layers.Dense(128, activation='relu'),
     tf.keras.layers.Dense(3, activation='sigmoid')
 ])
 
 model.compile(
     loss=tf.keras.losses.categorical_crossentropy,
-    optimizer=tf.keras.optimizers.SGD(learning_rate=0.1),
+    optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
     metrics=[
         tf.keras.metrics.BinaryAccuracy(name='accuracy'),
         tf.keras.metrics.Precision(name='precision'),
@@ -90,10 +92,7 @@ model.compile(
     ]
 )
 
-history = model.fit(X_train, y_train, epochs=epochs)
-
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
+history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size)
 
 rcParams['figure.figsize'] = (18, 8)
 rcParams['axes.spines.top'] = False
@@ -127,7 +126,7 @@ predictions = model.predict(X_test)
 
 
 #print("Prediction Softmax")
-predictions = softmax(predictions, axis=1)
+#predictions = softmax(predictions, axis=1)
 #print (predictions)
 
 #print("Prediction Final")
@@ -140,5 +139,4 @@ print("y_test:")
 print (y_test)
 
 
-from sklearn.metrics import multilabel_confusion_matrix
 print(multilabel_confusion_matrix(y_test, predictions))
