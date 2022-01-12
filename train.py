@@ -37,7 +37,7 @@ n_samples = (df.shape[0] - 1)
 n_features = (df.shape[1] - 1)
 random_state=42
 validation_split = 0.3
-epochs = 200
+epochs = 100
 
 
 df['Gehen'] = [
@@ -70,13 +70,8 @@ labels = y_test.columns.values
 
 tf.random.set_seed(42)
 model = tf.keras.Sequential([
-    tf.keras.layers.Dense(1500, activation='relu'),
-    tf.keras.layers.Dense(3000, activation='relu'),
-    tf.keras.layers.Dense(6000, activation='relu'),
-    tf.keras.layers.Dense(3000, activation='relu'),
-    tf.keras.layers.Dense(512, activation='relu'),
-    tf.keras.layers.Dense(256, activation='relu'),
-    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(128, activation='relu'),    
+    tf.keras.layers.Dense(64, activation='relu'),
     tf.keras.layers.Dense(3, activation='sigmoid')
 ])
 
