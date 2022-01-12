@@ -123,8 +123,6 @@ def generateWindowHeader(sensor_count):
 def differentiateWindows(windows):
     for window in windows[1:]:
         for i in range(len(window)-4, 0, -4):
-            if i < 10:
-                print(i)
             if i == 1:
                 window[1] = 0
                 window[2] = 0
@@ -213,15 +211,15 @@ print("Länge  A: " + str(len(SensorA_Data)))
 print("Länge  B: " + str(len(SensorB_Data)))
 print("Länge  Kombo: " + str(len(Kombo_Data)))
 """
-SensorA_Windows = differentiateWindows(SensorA_Windows)
-print("Schreibe Sensor A trainingsdaten...")
-writeWindowsToFile(SensorA_Windows, "SensorA.csv")
-#SensorB_Windows = differentiateWindows(SensorB_Windows)
-#print("Schreibe Sensor B trainingsdaten...")
-#writeWindowsToFile(SensorB_Windows, "SensorB.csv")
-#SensorAB_Windows = differentiateWindows(SensorAB_Windows)
-#print("Schreibe Sensor AB trainingsdaten...")
-#writeWindowsToFile(SensorAB_Windows, "SensorsAB.csv")
+#SensorA_Windows = differentiateWindows(SensorA_Windows)
+#print("Schreibe Sensor A trainingsdaten...")
+#writeWindowsToFile(SensorA_Windows, "SensorA.csv")
+SensorB_Windows = differentiateWindows(SensorB_Windows)
+print("Schreibe Sensor B trainingsdaten...")
+writeWindowsToFile(SensorB_Windows, "SensorB.csv")
+SensorAB_Windows = differentiateWindows(SensorAB_Windows)
+print("Schreibe Sensor AB trainingsdaten...")
+writeWindowsToFile(SensorAB_Windows, "SensorsAB.csv")
 
 """
 """
