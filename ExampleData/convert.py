@@ -4,15 +4,6 @@ import math
 
 from numpy import double
 
-SAMPLES_PER_SECOND = 125
-WINDOW_SIZE_IN_S = 3
-QUATERNIONS_PER_SAMPLE = 4
-SAMPLES_PER_WINDOW = SAMPLES_PER_SECOND*WINDOW_SIZE_IN_S
-
-SENSOR_A_NAME = "Hand"
-SENSOR_B_NAME = "Hosentasche"
-
-
 def readFile():
     directory = 'input/'
     return_data = []
@@ -26,28 +17,6 @@ def readFile():
                 return_data.extend(data[1:])
     return return_data
             
-
-#Macht aus eingelesenen Daten Fenster für Ein-Sensor-Training
-def TurnDataIntoWindows(data):
-    windows = []
-    for line in data:
-        
-        name = line[0]
-        pure_data = line[3:]
-        i = 0
-        while i < (len(pure_data) - SAMPLES_PER_WINDOW):
-            new = []
-            new.append(name)
-            new.extend(pure_data[i:i+SAMPLES_PER_WINDOW])
-            i = i+1
-            windows.append(new)
-            #print("Fenstergröße ist: " + str(len(new)))
-
-        print("Aus Bewegung " + name + " " + str(i) + " Fenster erstellt")
-    
-    print("Insgesamt " + str(len(windows)) + " Fenster generiert")
-    return windows
-
 #Holt Daten eines des angegebenen Sensors 
 def getDataForSensor(data, SensorName):
     returnData = []
@@ -61,23 +30,6 @@ def writeWindowsToFile(windows, filename):
         with open("output/" + filename, "w", newline="") as fileoutput:
             writer = csv.writer(fileoutput)
             writer.writerows(windows)
-
-#Prüft ob die Fenster in valider Fensterform sind
-def checkIfValid(windows):
-    returnval = True
-    for window in windows:
-        if len(window) != 601:
-            returnval = False
-    return returnval
-
-#Nimmt zwei Windows auf und gibt kombiniertes Traingsdatenset zurück
-def getDataForSensors(data, sensor1, sensor2):
-    returnData = []
-    for line in data:
-        if line[1] == sensor1:
-            for searchline in data:
-                if line[2] == searchline[2] and searchline[1] == sensor2:
-                    print("bla")
 
 
 def getWindowsFromLine(line):
@@ -112,12 +64,12 @@ def combineWindows(a_windows, b_windows):
 def generateWindowHeader(sensor_count):
     header = []
     header.append("MovementName")
-    for i in range(0, sensor_count):
-        for j in range(0, SAMPLES_PER_SECOND*WINDOW_SIZE_IN_S):
-            header.append("S" + str(i) + "_x" + str(j))
-            header.append("S" + str(i) + "_y" + str(j))
-            header.append("S" + str(i) + "_z" + str(j))
-            header.append("S" + str(i) + "_w" + str(j))
+    for i in range(0, SAMPLES_PER_SECOND*WINDOW_SIZE_IN_S):
+        for j in range(0, sensor_count):
+            header.append("S" + str(j) + "_x" + str(i))
+            header.append("S" + str(j) + "_y" + str(i))
+            header.append("S" + str(j) + "_z" + str(i))
+            header.append("S" + str(j) + "_w" + str(i))
     return header
 
 def differentiateWindows(windows):
@@ -139,7 +91,6 @@ def differentiateWindows(windows):
 """
 Data:           MovementName, SensorName, Recording_id, [Sensordaten] 
 Window:         Movementname, 2400x[Sensordaten]
-DualWindow:     Movementname, 2400x[Sensordaten_1], 2400x[Sensordaten_2]
 """
 
 """
@@ -147,12 +98,12 @@ Was ist mein Input?
     Eine Datei pro Bewegung mit Sensordaten von allen Sensoren.
 
 Was soll mein Output sein nach der Vorverarbeitung?
-    3 Ordner mit Trainingsdaten
-        Handgelenk
+    3 Dateien mit Trainingsdaten
+        Sensor A 
             Eine Datei mit Trainingsdaten (Window)
-        Gürtel
+        Sensor B
             Eine Datei mit Trainigsdaten (Window)
-        Kombiniert
+        SensorAB
             Eine Datei mit Trainingsdaten (DualWindow)
 """
 
@@ -169,8 +120,19 @@ Pseudo Algorithmus
                 Windows für Sensor A holen.
                 Windows für Sensor B holen.
                 aus den beiden die Kombo Windows 
-        
+        Wenn letzte Zeile:
+            Windows extrahieren aber nur für validierung benutzen.       
 '''
+
+
+SAMPLES_PER_SECOND = 125
+WINDOW_SIZE_IN_S = 3
+QUATERNIONS_PER_SAMPLE = 4
+SAMPLES_PER_WINDOW = SAMPLES_PER_SECOND*WINDOW_SIZE_IN_S
+
+SENSOR_A_NAME = "Hand"
+SENSOR_B_NAME = "Hosentasche"
+
 
 data = readFile()
 
@@ -178,9 +140,17 @@ SensorA_Windows = []
 SensorB_Windows = []
 SensorAB_Windows = []
 
+SensorA_TestWindows = []
+SensorB_TestWindows = []
+SensorAB_TestWindows = []
+
 SensorA_Windows.append(generateWindowHeader(1))
 SensorB_Windows.append(generateWindowHeader(1))
 SensorAB_Windows.append(generateWindowHeader(2))
+
+SensorA_TestWindows.append(generateWindowHeader(1))
+SensorB_TestWindows.append(generateWindowHeader(1))
+SensorAB_TestWindows.append(generateWindowHeader(2))
 
 for line in data:
     movemnt_name = line[0]
@@ -190,36 +160,78 @@ for line in data:
     if sensor_name == SENSOR_A_NAME:
         for searchline in data:
             if searchline[0] == movemnt_name and searchline[1] == SENSOR_B_NAME and searchline[2] == recording_id:
-                print("--> Datenpaar gefunden! Movement: " + movemnt_name + " rec_id: " + recording_id) 
-                a_windows = getWindowsFromLine(line)
-                print(str(len(a_windows)) + " Windows für Sensor A extrahiert")
-                b_windows = getWindowsFromLine(searchline)
-                print(str(len(b_windows)) + " Windows für Sensor B extrahiert")
-                kombo_windows = combineWindows(a_windows, b_windows)
-                print(str(len(kombo_windows)) +" Windows für Sensoren A,B kombiniert")
+                if data.index(line) + 2 < len(data):
+                    if data[data.index(line) + 2][0] != movemnt_name:
+                        print("--> Test-Datenpaar gefunden! Movement: " + movemnt_name + " rec_id: " + recording_id) 
+                        a_test_windows = getWindowsFromLine(line)
+                        #print(str(len(a_windows)) + " Windows für Sensor A extrahiert")
+                        b_test_windows = getWindowsFromLine(searchline)
+                        #print(str(len(b_windows)) + " Windows für Sensor B extrahiert")
+                        kombo_test_windows = combineWindows(a_test_windows, b_test_windows)
+                        #print(str(len(kombo_test_windows)) +" Windows für Sensoren A,B kombiniert")
 
-                SensorA_Windows.extend(a_windows)
-                SensorB_Windows.extend(b_windows)
-                SensorAB_Windows.extend(kombo_windows)
-                print("Daten angehängt")
-                print("Insgesamt Windows für  A: " + str(len(SensorA_Windows)))
-                print("Insgesamt Windows für  B: " + str(len(SensorB_Windows)))
-                print("Insgesamt Windows für AB: " + str(len(SensorAB_Windows)))
+                        SensorA_TestWindows.extend(a_test_windows)
+                        SensorB_TestWindows.extend(b_test_windows)
+                        SensorAB_TestWindows.extend(kombo_test_windows)
+                    else:
+                        print("--> Datenpaar gefunden! Movement: " + movemnt_name + " rec_id: " + recording_id) 
+                        a_windows = getWindowsFromLine(line)
+                        #print(str(len(a_windows)) + " Windows für Sensor A extrahiert")
+                        b_windows = getWindowsFromLine(searchline)
+                        #print(str(len(b_windows)) + " Windows für Sensor B extrahiert")
+                        kombo_windows = combineWindows(a_windows, b_windows)
+                        #print(str(len(kombo_windows)) +" Windows für Sensoren A,B kombiniert")
 
-"""
-print("Länge  A: " + str(len(SensorA_Data)))
-print("Länge  B: " + str(len(SensorB_Data)))
-print("Länge  Kombo: " + str(len(Kombo_Data)))
-"""
-#SensorA_Windows = differentiateWindows(SensorA_Windows)
-#print("Schreibe Sensor A trainingsdaten...")
-#writeWindowsToFile(SensorA_Windows, "SensorA.csv")
+                        SensorA_Windows.extend(a_windows)
+                        SensorB_Windows.extend(b_windows)
+                        SensorAB_Windows.extend(kombo_windows)
+                        #print("Daten angehängt")
+                        #print("Insgesamt Windows für  A: " + str(len(SensorA_Windows)))
+                        #print("Insgesamt Windows für  B: " + str(len(SensorB_Windows)))
+                        #print("Insgesamt Windows für AB: " + str(len(SensorAB_Windows)))
+                else:
+                    print("--> Test-Datenpaar gefunden! Movement: " + movemnt_name + " rec_id: " + recording_id) 
+                    a_test_windows = getWindowsFromLine(line)
+                    #print(str(len(a_windows)) + " Windows für Sensor A extrahiert")
+                    b_test_windows = getWindowsFromLine(searchline)
+                    #print(str(len(b_windows)) + " Windows für Sensor B extrahiert")
+                    kombo_test_windows = combineWindows(a_test_windows, b_test_windows)
+                    #print(str(len(kombo_test_windows)) +" Windows für Sensoren A,B kombiniert")
+
+                    SensorA_TestWindows.extend(a_test_windows)
+                    SensorB_TestWindows.extend(b_test_windows)
+                    SensorAB_TestWindows.extend(kombo_test_windows)
+                
+
+
+
+print("Länge  A: " + str(len(SensorA_Windows)))
+print("Länge  A Test: " + str(len(SensorA_TestWindows)) + " Ratio: " + (str(100*(len(SensorA_TestWindows)/len(SensorA_Windows)))))
+
+print("Länge  B: " + str(len(SensorB_Windows)))
+print("Länge  B Test: " + str(len(SensorB_TestWindows)) + " Ratio: " + (str(100*(len(SensorB_TestWindows)/len(SensorB_Windows)))))
+
+print("Länge  Kombo: " + str(len(SensorAB_Windows)))
+print("Länge  Kombo Test: " + str(len(SensorAB_TestWindows)) + " Ratio: " + (str(100*(len(SensorAB_TestWindows)/len(SensorAB_Windows)))))
+
+
+SensorA_Windows = differentiateWindows(SensorA_Windows)
+print("Schreibe Sensor A trainingsdaten...")
+writeWindowsToFile(SensorA_Windows, "SensorA.csv")
+SensorA_TestWindows = differentiateWindows(SensorA_TestWindows)
+print("Schreibe Sensor A Testdaten...")
+writeWindowsToFile(SensorA_TestWindows, "SensorA_Test.csv")
+
 SensorB_Windows = differentiateWindows(SensorB_Windows)
 print("Schreibe Sensor B trainingsdaten...")
 writeWindowsToFile(SensorB_Windows, "SensorB.csv")
+SensorB_TestWindows = differentiateWindows(SensorB_TestWindows)
+print("Schreibe Sensor B Testdaten...")
+writeWindowsToFile(SensorB_TestWindows, "SensorB_Test.csv")
+
 SensorAB_Windows = differentiateWindows(SensorAB_Windows)
 print("Schreibe Sensor AB trainingsdaten...")
 writeWindowsToFile(SensorAB_Windows, "SensorsAB.csv")
-
-"""
-"""
+SensorAB_TestWindows = differentiateWindows(SensorAB_TestWindows)
+print("Schreibe Sensor AB Testdaten...")
+writeWindowsToFile(SensorAB_TestWindows, "SensorAB_Test.csv")

@@ -15,70 +15,66 @@ from matplotlib import rcParams
 
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
-
-df = pd.read_csv("ExampleData/output/SensorsAB.csv")
-    
-
-'''
-df['Dancen'] = [
-    1 if MovementName == "dancen" else 0 for MovementName in df['MovementName']
-]
-
-df['Dancen'] = [
-    1 if MovementName == "dancen" else 0 for MovementName in df['MovementName']
-]
-
-df.drop('MovementName', axis=1, inplace=True)
-
-print(df)
-
-X = df.drop('Dancen', axis=1)
-y = df['Dancen']
-'''
-
 # Configuration options
-n_samples = (df.shape[0] - 1) 
-n_features = (df.shape[1] - 1)
+file = "ExampleData/output/SensorB"
 random_state=42
-validation_split = 0.3
+validation_split = 0.1
+test_split = 0.1
+
+learning_rate = 0.02
 epochs = 5000
-batch_size = 1000
-learning_rate = 0.01
+batch_size = 500
 
-df['Gehen'] = [
-    1 if MovementName == "Gehen" else 0 for MovementName in df['MovementName']
+
+df_train = pd.read_csv(file +".csv")
+
+df_train['Gehen'] = [
+    1 if MovementName == "Gehen" else 0 for MovementName in df_train['MovementName']
 ]
-df['huepfen'] = [
-    1 if MovementName == "huepfen" else 0 for MovementName in df['MovementName']
+df_train['huepfen'] = [
+    1 if MovementName == "huepfen" else 0 for MovementName in df_train['MovementName']
 ]
-df['stehen'] = [
-    1 if MovementName == "stehen" else 0 for MovementName in df['MovementName']
+df_train['stehen'] = [
+    1 if MovementName == "stehen" else 0 for MovementName in df_train['MovementName']
 ]
 
-y = df[['Gehen','stehen','huepfen']]
-y.append = df['stehen']
-y.append = df['huepfen']
+y_train = df_train[['Gehen','stehen','huepfen']]
+X_train = df_train.drop(['MovementName', 'Gehen', 'stehen', 'huepfen'], axis=1)
 
-X = df.drop(['MovementName', 'Gehen', 'stehen', 'huepfen'], axis=1)
-
-
-X_train, X_test, y_train, y_test = train_test_split(
+'''X_train, X_test, y_train, y_test = train_test_split(
     X, y, 
-    test_size=validation_split, random_state=random_state
-)
+    test_size=test_split, random_state=random_state
+)'''
 
-#print(X_train)
-#print(y_train)
-#np.savetxt("test.csv", X_train, delimiter=',')
-labels = y_test.columns.values
+
+df_test = pd.read_csv( file + "_Test.csv")
+
+df_test['Gehen'] = [
+    1 if MovementName == "Gehen" else 0 for MovementName in df_test['MovementName']
+]
+df_test['huepfen'] = [
+    1 if MovementName == "huepfen" else 0 for MovementName in df_test['MovementName']
+]
+df_test['stehen'] = [
+    1 if MovementName == "stehen" else 0 for MovementName in df_test['MovementName']
+]
+
+y_test = df_test[['Gehen','stehen','huepfen']]
+X_test = df_test.drop(['MovementName', 'Gehen', 'stehen', 'huepfen'], axis=1)
+
+
+print("Daten geladen... " + str(len(X_train)) + " Trainingsdaten und " + str(len(X_test)) + " Testdaten\nStarten?")
+input()
 
 
 tf.random.set_seed(42)
 model = tf.keras.Sequential([
-    tf.keras.layers.Dense(1500, activation='relu'),
-    tf.keras.layers.Dense(1000, activation='relu'),
-    tf.keras.layers.Dense(500, activation='relu'),
+    tf.keras.layers.Dense(256, activation='relu'),
+    tf.keras.layers.Dense(256, activation='relu'),
+    tf.keras.layers.Dense(256, activation='relu'),
+    tf.keras.layers.Dense(256, activation='relu'),
     tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(64, activation='relu'),
     tf.keras.layers.Dense(3, activation='sigmoid')
 ])
 
@@ -92,7 +88,7 @@ model.compile(
     ]
 )
 
-history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size)
+history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=validation_split)
 
 rcParams['figure.figsize'] = (18, 8)
 rcParams['axes.spines.top'] = False
@@ -120,23 +116,7 @@ plt.legend()
 
 plt.show()
 
-#print("Prediction:")
+
 predictions = model.predict(X_test)
-#print (predictions)
-
-
-#print("Prediction Softmax")
-#predictions = softmax(predictions, axis=1)
-#print (predictions)
-
-#print("Prediction Final")
 predictions = np.around(predictions)
-#print (predictions)
-
-
-
-print("y_test:")
-print (y_test)
-
-
 print(multilabel_confusion_matrix(y_test, predictions))
