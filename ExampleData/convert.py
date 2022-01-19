@@ -130,7 +130,7 @@ WINDOW_SIZE_IN_S = 3
 QUATERNIONS_PER_SAMPLE = 4
 SAMPLES_PER_WINDOW = SAMPLES_PER_SECOND*WINDOW_SIZE_IN_S
 
-SENSOR_A_NAME = "Gürtel"
+SENSOR_A_NAME = "GÃ¼rtel"
 SENSOR_B_NAME = "Handgelenk"
 
 
@@ -156,7 +156,7 @@ for line in data:
     movemnt_name = line[0]
     sensor_name = line[1]
     recording_id = line[2]
-    
+    #print(movemnt_name + " " + sensor_name + " " + recording_id)
     if sensor_name == SENSOR_A_NAME:
         for searchline in data:
             if searchline[0] == movemnt_name and searchline[1] == SENSOR_B_NAME and searchline[2] == recording_id:
