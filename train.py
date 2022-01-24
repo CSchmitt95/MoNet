@@ -23,11 +23,10 @@ def trainModel(model, model_filename):
     #callbacks.append(tf.keras.callbacks.EarlyStopping(monitor='precision', patience=1500))
     history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, callbacks=callbacks, class_weight=class_weights)
     
-    outputName = sensorName + "_" + model_filename + "LearningRate" + str(learning_rate_SGD)
+    outputName = sensorName + "_" + model_filename + "_LearningRate" + str(learning_rate_SGD)
     graphicsOutput = outputpath + "graphs/" + outputName
     modelOutput = outputpath + "models/" + outputName
-
-    model.save(outputpath + "models/"+ sensorName + "_"  + model_filename)
+    model.save(modelOutput + "_"  + model_filename)
 
     rcParams['figure.figsize'] = (18, 8)
     rcParams['axes.spines.top'] = False
@@ -140,7 +139,7 @@ print("Daten geladen... " + str(len(X_train)) + " Trainingsdaten und " + str(len
 
 learning_rate_Adam = 0.0001
 learning_rate_SGD = 0.003
-epochs = 10000
+epochs = 5500
 batch_size = 1000
 
 
@@ -206,5 +205,5 @@ tinynet.compile(
 )
 
 trainModel(hugenet,"BigNet")
-trainModel(bignet,"MediumNet")
-trainModel(tinynet,"SmallNet")
+#trainModel(bignet,"MediumNet")
+#trainModel(tinynet,"SmallNet")
