@@ -19,10 +19,16 @@ from matplotlib import rcParams
 def trainModel(model, model_filename):
     callbacks = []
     #callback1 = tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=50)
-    callbacks.append(tf.keras.callbacks.EarlyStopping(monitor='loss', patience=500))
-    #callback3 = tf.keras.callbacks.EarlyStopping(monitor='precision', patience=50)
-    history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=validation_split, callbacks=callbacks, class_weight=class_weights)
+    callbacks.append(tf.keras.callbacks.EarlyStopping(monitor='loss', patience=1500))
+    #callbacks.append(tf.keras.callbacks.EarlyStopping(monitor='precision', patience=1500))
+    history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, callbacks=callbacks, class_weight=class_weights)
     
+    outputName = sensorName + "_" + model_filename + "LearningRate" + str(learning_rate_SGD)
+    graphicsOutput = outputpath + "graphs/" + outputName
+    modelOutput = outputpath + "models/" + outputName
+
+    model.save(outputpath + "models/"+ sensorName + "_"  + model_filename)
+
     rcParams['figure.figsize'] = (18, 8)
     rcParams['axes.spines.top'] = False
     rcParams['axes.spines.right'] = False
@@ -49,20 +55,10 @@ def trainModel(model, model_filename):
     plt.xlabel('Epoch', size=14)
     plt.ylim(0, 1.5)
     plt.legend()
-
-
-
-    #print(confusion_matrix)
-
-    #loss, acc = model.evaluate(X_test, y_test, verbose=2)
-    #print("Untrained model, accuracy: {:5.2f}%".format(100 * acc))
-
-    model.save(outputpath + "models/"+ filename + "_"  + model_filename)
-    plt.savefig( outputpath + "graphs/"+ filename +"_" + model_filename + "_training.png", bbox_inches='tight')
-    plt.clf()
+    plt.savefig( graphicsOutput + "_training.png", bbox_inches='tight')
+    plt.clf() 
 
     predictions_onehot = model.predict(X_test)
-    #predictions_onehot = np.around(predictions)
     y_test_onehot = y_test
     y_test_cm = y_test_onehot.values.argmax(axis=1)
     y_pred_cm = predictions_onehot.argmax(axis=1)
@@ -71,20 +67,20 @@ def trainModel(model, model_filename):
     cm_df = pd.DataFrame(cm, index = ["Gehen", "Stehen", "Stolpern"], columns = ["Gehen", "Stehen", "Stolpern"])
     
     plt.figure(figsize=(5,4))
-    sns.heatmap(cm_df, annot=True)
+    sns.heatmap(cm_df, annot=True, fmt='d')
     plt.title('Confusion Matrix')
     plt.ylabel('Actal Values')
     plt.xlabel('Predicted Values')
-    plt.savefig( outputpath + "graphs/"+ filename + "_" + model_filename + "_confusion.png", bbox_inches='tight')
+    plt.savefig( graphicsOutput + "_confusion.png", bbox_inches='tight')
     plt.clf()
 
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 # Configuration options
-outputpath = "Results/Spaziergang/"
+outputpath = "Results/Spaziergang_balanced/"
 filepath = "ExampleData/output/"
-filename = "SensorB"
-file = filepath + filename
+sensorName = "SensorA"
+file = filepath + sensorName
 random_state=42
 validation_split = 0.1
 test_split = 0.1
@@ -102,20 +98,27 @@ df_train['Stolpern'] = [
     1 if MovementName == "Stolpern" else 0 for MovementName in df_train['MovementName']
 ]
 
-num_total = len(df_train)
-num_gehen = df_train['Gehen'].sum()
-num_stehen = df_train['Stehen'].sum()
 num_stolpern = df_train['Stolpern'].sum()
+print("Anzahl stolper beispiele: " + str(num_stolpern))
+df_train_new = df_train.query("Gehen == 1").sample(n=num_stolpern*3)
+df_train_new = df_train_new.append(df_train.query("Stehen == 1").sample(n=num_stolpern*3))
+df_train_new = df_train_new.append(df_train.query("Stolpern == 1"))
+
+print(df_train_new)
+
+
+num_total = len(df_train_new)
+num_gehen = df_train_new['Gehen'].sum()
+num_stehen = df_train_new['Stehen'].sum()
+num_stolpern = df_train_new['Stolpern'].sum()
 class_weights = {
     0 : (1 / num_gehen) * (num_total / 3.0), 
     1 : (1 / num_stehen) * (num_total / 3.0), 
     2 : (1 / num_stolpern) * (num_total / 3.0), 
 }
-
 print(class_weights)
-
-y_train = df_train[['Gehen','Stehen','Stolpern']]
-X_train = df_train.drop(['MovementName', 'Gehen', 'Stehen', 'Stolpern'], axis=1)
+y_train = df_train_new[['Gehen','Stehen','Stolpern']]
+X_train = df_train_new.drop(['MovementName', 'Gehen', 'Stehen', 'Stolpern'], axis=1)
 
 
 df_test = pd.read_csv( file + "_Test.csv")
@@ -133,19 +136,13 @@ df_test['Stolpern'] = [
 y_test = df_test[['Gehen','Stehen','Stolpern']]
 X_test = df_test.drop(['MovementName', 'Gehen', 'Stehen', 'Stolpern'], axis=1)
 
-
-'''X_train, X_test, y_train, y_test = train_test_split(
-    X, y, 
-    test_size=test_split, random_state=random_state
-)'''
-
 print("Daten geladen... " + str(len(X_train)) + " Trainingsdaten und " + str(len(X_test)) + " Testdaten\nStarten?")
 
 learning_rate_Adam = 0.0001
 learning_rate_SGD = 0.003
-epochs = 3600
-epochs_per_iteration = 100
-batch_size = 1500
+epochs = 10000
+batch_size = 1000
+
 
 
 tf.random.set_seed(42)
@@ -209,5 +206,5 @@ tinynet.compile(
 )
 
 trainModel(hugenet,"BigNet")
-#trainModel(bignet,"MediumNet")
-#trainModel(tinynet,"SmallNet")
+trainModel(bignet,"MediumNet")
+trainModel(tinynet,"SmallNet")
