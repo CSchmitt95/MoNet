@@ -117,7 +117,7 @@ class_weights = {
 }
 print(class_weights)
 y_train = df_train_new[['Gehen','Stehen','Stolpern']]
-X_train = df_train_new.drop(['MovementName', 'Gehen', 'Stehen', 'Stolpern'], axis=1)
+X_train = df_train_new.drop(['MovementName', 'Gehen', 'Stehen', 'Stolpern'], axis=1).astype(np.float32)
 
 
 df_test = pd.read_csv( file + "_Test.csv")
@@ -133,7 +133,7 @@ df_test['Stolpern'] = [
 ]
 
 y_test = df_test[['Gehen','Stehen','Stolpern']]
-X_test = df_test.drop(['MovementName', 'Gehen', 'Stehen', 'Stolpern'], axis=1)
+X_test = df_test.drop(['MovementName', 'Gehen', 'Stehen', 'Stolpern'], axis=1).astype(np.float32)
 
 print("Daten geladen... " + str(len(X_train)) + " Trainingsdaten und " + str(len(X_test)) + " Testdaten\nStarten?")
 
@@ -142,7 +142,7 @@ learning_rate_SGD = 0.003
 epochs = 5500
 batch_size = 1000
 
-
+print(X_train.dtypes)
 
 tf.random.set_seed(42)
 
@@ -204,6 +204,6 @@ tinynet.compile(
     ]
 )
 
-trainModel(hugenet,"BigNet")
+#trainModel(hugenet,"BigNet")
 #trainModel(bignet,"MediumNet")
-#trainModel(tinynet,"SmallNet")
+trainModel(tinynet,"SmallNet")
