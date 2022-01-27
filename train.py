@@ -78,7 +78,7 @@ print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 # Configuration options
 outputpath = "Results/Spaziergang_balanced/"
 filepath = "ExampleData/output/"
-sensorName = "SensorA"
+sensorName = "SensorKombo"
 file = filepath + sensorName
 random_state=42
 validation_split = 0.1
@@ -139,7 +139,7 @@ print("Daten geladen... " + str(len(X_train)) + " Trainingsdaten und " + str(len
 
 learning_rate_Adam = 0.0001
 learning_rate_SGD = 0.003
-epochs = 5500
+epochs = 8000
 batch_size = 1000
 
 print(X_train.dtypes)
@@ -204,6 +204,6 @@ tinynet.compile(
     ]
 )
 
-#trainModel(hugenet,"BigNet")
-#trainModel(bignet,"MediumNet")
+trainModel(hugenet,"BigNet")
+trainModel(bignet,"MediumNet")
 trainModel(tinynet,"SmallNet")
