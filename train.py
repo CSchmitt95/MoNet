@@ -62,7 +62,6 @@ def trainModel(model, model_filename):
     y_test_cm = y_test_onehot.values.argmax(axis=1)
     y_pred_cm = predictions_onehot.argmax(axis=1)
     cm = confusion_matrix(y_test_cm, y_pred_cm)
-    
     cm_df = pd.DataFrame(cm, index = ["Gehen", "Stehen", "Stolpern"], columns = ["Gehen", "Stehen", "Stolpern"])
     
     plt.figure(figsize=(5,4))

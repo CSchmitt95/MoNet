@@ -131,3 +131,5 @@ dmypy.json
 ExampleData/output
 ExampleData/1
 ExampleData/1/SensorB.csv
+New/TrainNetwork.py
+New/Data/TrainingData/*
