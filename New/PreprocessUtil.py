@@ -83,3 +83,4 @@ def ListAnalyser(object):
     for x in object:
         if(isinstance(x, list)):
             print("--> Element ist Liste(" + str(len(x))+ ")")
+
