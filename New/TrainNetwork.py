@@ -43,8 +43,6 @@ for sensorname in os.listdir(DATA_PATH):
         movements = df['MovementName'].unique()
         print("Movements: " + str(movements))
     
-    print(df)
-'''
     sensorname = sensorname[:-4]
     TrainNetworkUtils.saveDistributionGraph(df, GRAPHS_DIR + sensorname + "_distribution_before.png" )
 
@@ -92,6 +90,7 @@ for sensorname in os.listdir(DATA_PATH):
 
 
     model.save(MODELS_DIR + sensorname)
+
     TrainNetworkUtils.saveHistoryGraph(history, GRAPHS_DIR + sensorname + "_history.png")
 
     predictions_onehot = model.predict(X_test)
@@ -106,4 +105,3 @@ for sensorname in os.listdir(DATA_PATH):
     tflite_model = converter.convert()
     with open (MODELS_DIR + sensorname + ".tflite", 'wb') as f:
         f.write(tflite_model)
-        '''
