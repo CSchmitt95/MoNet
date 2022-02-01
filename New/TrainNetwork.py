@@ -22,7 +22,7 @@ MODELS_DIR = RESULT_DIR + "Models/"
 
 DATA_PATH = "Data/TrainingData/"
 LEARNING_RATE = 0.003
-EPOCHS = 6000
+EPOCHS = 7000
 BATCH_SIZE = 1000
 
 #Variablen
@@ -62,7 +62,8 @@ for sensorname in os.listdir(DATA_PATH):
     #Split in Training und Test Daten
     X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.20, random_state=42)
 
-    model = tf.keras.Sequential([
+    model = tf.keras.Sequential([    
+    tf.keras.layers.Dense(256, activation='relu'),
     tf.keras.layers.Dense(128, activation='relu'),
     tf.keras.layers.Dense(64, activation='relu'),
     tf.keras.layers.Dense(3, activation='softmax')
@@ -97,4 +98,7 @@ for sensorname in os.listdir(DATA_PATH):
     cm_df = pd.DataFrame(cm, index = movements, columns =movements)
     TrainNetworkUtils.saveConfusionMatrix(cm_df, GRAPHS_DIR + sensorname + "_confusion.png")
 
-
+    converter = tf.lite.TFLiteConverter.from_keras_model(model)
+    tflite_model = converter.convert()
+    with open (MODELS_DIR + sensorname + ".tflite", 'wb') as f:
+        f.write(tflite_model)
