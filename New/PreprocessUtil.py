@@ -3,6 +3,7 @@ from symtable import Symbol
 from numpy import isin
 import PreprocessConstants
 import csv
+import copy
 from progress.bar import Bar
 
 def getWindowsFromLine(line):
@@ -53,12 +54,13 @@ def getCombinedWindowsOf(windowed_data):
     first = True
     counter = 0
     for sensor in sensors:
-        sensor_windows = windowed_data.get(sensor)
+        sensor_windows = copy.deepcopy(windowed_data.get(sensor))
         if first == True:
+            print("Erster Sensor: " + sensor)
             output_windows = sensor_windows
-            output_windows[0] = generateWindowHeader(0)
             first = False
         else:
+            print("Füge Hinzu: " + sensor)
             for i in range(0, len(output_windows)):
                 if i == 0:
                     output_windows[i].extend(generateWindowHeader(counter))

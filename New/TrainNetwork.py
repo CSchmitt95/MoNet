@@ -43,6 +43,8 @@ for sensorname in os.listdir(DATA_PATH):
         movements = df['MovementName'].unique()
         print("Movements: " + str(movements))
     
+    print(df)
+'''
     sensorname = sensorname[:-4]
     TrainNetworkUtils.saveDistributionGraph(df, GRAPHS_DIR + sensorname + "_distribution_before.png" )
 
@@ -82,6 +84,8 @@ for sensorname in os.listdir(DATA_PATH):
     callbacks = []
     callbacks.append(tf.keras.callbacks.EarlyStopping(monitor='loss', patience=1500))
 
+    print(X_train)
+    input()
     history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks, validation_split = 0.1)
     
     TrainNetworkUtils.writeReport(LEARNING_RATE, EPOCHS, BATCH_SIZE, model, RESULT_DIR + "Parameters.txt")
@@ -102,3 +106,4 @@ for sensorname in os.listdir(DATA_PATH):
     tflite_model = converter.convert()
     with open (MODELS_DIR + sensorname + ".tflite", 'wb') as f:
         f.write(tflite_model)
+        '''

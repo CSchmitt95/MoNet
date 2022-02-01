@@ -132,3 +132,7 @@ ExampleData/output
 ExampleData/1
 ExampleData/1/SensorB.csv
 New/Data/TrainingData/*
+
+#MacOS
+*/.DS_Store
+.DS_Store
