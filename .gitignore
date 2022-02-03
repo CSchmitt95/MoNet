@@ -128,10 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-ExampleData/output
-ExampleData/1
-ExampleData/1/SensorB.csv
-New/Data/TrainingData/*
+#Trainingdata
+Data/TrainingData/*
 
 #MacOS
 */.DS_Store
