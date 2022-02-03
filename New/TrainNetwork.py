@@ -14,7 +14,7 @@ from sklearn.metrics import confusion_matrix
 
 
 #Konstanten
-CURRENT_NAME = "002_MehrStolperDaten"
+CURRENT_NAME = "003_MehrStolperDaten_BiggerNet"
 RESULT_DIR = "Results/" + CURRENT_NAME + "/"
 GRAPHS_DIR = RESULT_DIR + "Graphs/"
 MODELS_DIR = RESULT_DIR + "Models/"
@@ -62,7 +62,8 @@ for sensorname in os.listdir(DATA_PATH):
     #Split in Training und Test Daten
     X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.20, random_state=42)
 
-    model = tf.keras.Sequential([    
+    model = tf.keras.Sequential([ 
+    tf.keras.layers.Dense(512, activation='relu'),
     tf.keras.layers.Dense(256, activation='relu'),
     tf.keras.layers.Dense(128, activation='relu'),
     tf.keras.layers.Dense(64, activation='relu'),
@@ -82,8 +83,6 @@ for sensorname in os.listdir(DATA_PATH):
     callbacks = []
     callbacks.append(tf.keras.callbacks.EarlyStopping(monitor='loss', patience=1500))
 
-    print(X_train)
-    input()
     history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks, validation_split = 0.1)
     
     TrainNetworkUtils.writeReport(LEARNING_RATE, EPOCHS, BATCH_SIZE, model, RESULT_DIR + "Parameters.txt")
