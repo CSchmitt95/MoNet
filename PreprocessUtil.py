@@ -5,6 +5,7 @@ import PreprocessConstants
 import csv
 import copy
 from progress.bar import Bar
+from pyquaternion import Quaternion
 
 def getWindowsFromLine(line):
     windows = []
@@ -47,6 +48,23 @@ def differentiateWindows(windows, name):
                     window[i+3] = float(window[i+3]) - float(window[i-4+3])
             bar.next()
         return windows
+
+def differentiateCorrectly(lines):
+    for line in lines:
+        name = line[0]
+        line = line[3:]
+        with Bar(name + str(lines.index), max=int(len(line)/4)) as bar:
+            for i in range(0, int(len(line)/4 -4)):
+                this = Quaternion(line[i*4],line[i*4+1],line[i*4+2],line[i*4+3])
+                next = Quaternion(line[(i+1)*4],line[(i+1)*4+1],line[(i+1)*4+2],line[(i+1)*4+3])
+                diff = next * this.inverse
+                line[i*4+0] = diff[0]
+                line[i*4+1] = diff[1]
+                line[i*4+2] = diff[2]
+                line[i*4+3] = diff[3]
+                bar.next()
+            
+            
 
 def getCombinedWindowsOf(windowed_data):
     sensors = windowed_data.keys()

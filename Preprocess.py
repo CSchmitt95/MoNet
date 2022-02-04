@@ -60,6 +60,11 @@ if number_of_chunks%1 != 0.0:
     print("Das hier sollte eine Ganze zahl sein: " + str(number_of_chunks) + " ... " + str())
     exit()
 
+print("Bilde Differenzquaternionen...")
+PreprocessUtil.differentiateCorrectly(complete_data)
+PreprocessUtil.writeWindowsToFile(complete_data, "CompleteData.csv")
+input()
+
 #Generiere Output Dictionary und passende Header
 print("Generiere Output Dictionary")
 print("Schreibe Header...")
@@ -88,11 +93,11 @@ with Bar("Aufnahmen", max=number_of_chunks) as bar:
 print()
 
 #Dictionary ist voll. jetzt müssen die windows nur noch genullt werden...
-print("Differenziere Windows... ")
-for sensor in sensors:
-    windows = windowed_data.get(sensor)
-    nulled_windows = PreprocessUtil.differentiateWindows(windows, sensor)
-    windowed_data.update({ sensor: nulled_windows})
+#print("Differenziere Windows... ")
+#for sensor in sensors:
+#    windows = windowed_data.get(sensor)
+#    nulled_windows = PreprocessUtil.differentiateWindows(windows, sensor)
+#    windowed_data.update({ sensor: nulled_windows})
 
 
 #Kombiniere Alle Sensordaten in Kombo-Klasse
