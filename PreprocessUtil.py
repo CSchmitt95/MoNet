@@ -52,16 +52,16 @@ def differentiateWindows(windows, name):
 def differentiateCorrectly(lines):
     for line in lines:
         name = line[0]
-        line = line[3:]
-        with Bar(name + str(lines.index), max=int(len(line)/4)) as bar:
-            for i in range(0, int(len(line)/4 -4)):
-                this = Quaternion(line[i*4],line[i*4+1],line[i*4+2],line[i*4+3])
-                next = Quaternion(line[(i+1)*4],line[(i+1)*4+1],line[(i+1)*4+2],line[(i+1)*4+3])
+        data = line[3:]
+        with Bar(name + " (" + str(lines.index(line)) + "/" + str(len(lines))+ ")", max=int(len(data)/4)) as bar:
+            for i in range(0, int(len(data)/4 -4)):
+                this = Quaternion(data[i*4],data[i*4+1],data[i*4+2],data[i*4+3])
+                next = Quaternion(data[(i+1)*4],data[(i+1)*4+1],data[(i+1)*4+2],data[(i+1)*4+3])
                 diff = next * this.inverse
-                line[i*4+0] = diff[0]
-                line[i*4+1] = diff[1]
-                line[i*4+2] = diff[2]
-                line[i*4+3] = diff[3]
+                data[i*4+0] = diff[0]
+                data[i*4+1] = diff[1]
+                data[i*4+2] = diff[2]
+                data[i*4+3] = diff[3]
                 bar.next()
             
             
