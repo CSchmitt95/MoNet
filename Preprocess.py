@@ -12,10 +12,12 @@ import pandas as pd
 import PreprocessUtil
 from progress.bar import Bar
 import pprint
-
+from pathlib import Path
 
 #Dataframe, der alle CSV datein einliest.
 complete_data = []
+
+Path(OUTPUTPATH).mkdir(parents=True, exist_ok=True)
 
 print("Einlesen:")
 
@@ -99,9 +101,11 @@ print()
 
 
 #Kombiniere Alle Sensordaten in Kombo-Klasse
+print("Kombiniere windows...")
 combined_windows = PreprocessUtil.getCombinedWindowsOf(windowed_data)
 windowed_data.update({"Kombo" : combined_windows})
 sensors.append("Kombo")
+print("")
 
 
 #Daten in die CSVs schreiben.
