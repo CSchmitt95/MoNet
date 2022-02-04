@@ -14,7 +14,7 @@ from sklearn.metrics import confusion_matrix
 
 
 #Konstanten
-CURRENT_NAME = "003_MehrStolperDaten_BiggerNet"
+CURRENT_NAME = "004_NeueDifferenzierung"
 RESULT_DIR = "Results/" + CURRENT_NAME + "/"
 GRAPHS_DIR = RESULT_DIR + "Graphs/"
 MODELS_DIR = RESULT_DIR + "Models/"
@@ -63,7 +63,6 @@ for sensorname in os.listdir(DATA_PATH):
     X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.20, random_state=42)
 
     model = tf.keras.Sequential([ 
-    tf.keras.layers.Dense(512, activation='relu'),
     tf.keras.layers.Dense(256, activation='relu'),
     tf.keras.layers.Dense(128, activation='relu'),
     tf.keras.layers.Dense(64, activation='relu'),
