@@ -42,7 +42,7 @@ for sensorname in os.listdir(DATA_PATH):
         #datasets.update({sensorname[:-4] : df_training})
         movements = df['MovementName'].unique()
         print("Movements: " + str(movements))
-    
+
     sensorname = sensorname[:-4]
     TrainNetworkUtils.saveDistributionGraph(df, GRAPHS_DIR + sensorname + "_distribution_before.png" )
 
