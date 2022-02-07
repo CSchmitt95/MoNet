@@ -63,7 +63,7 @@ if number_of_chunks%1 != 0.0:
     exit()
 
 print("Bilde Differenzquaternionen...")
-PreprocessUtil.differentiateCorrectly(complete_data)
+#PreprocessUtil.differentiateCorrectly(complete_data)
 
 #Generiere Output Dictionary und passende Header
 print("Generiere Output Dictionary")
