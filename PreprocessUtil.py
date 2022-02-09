@@ -104,3 +104,20 @@ def ListAnalyser(object):
         if(isinstance(x, list)):
             print("--> Element ist Liste(" + str(len(x))+ ")")
 
+def normalizeWindows(windows):    
+    with Bar("normalisiere Windows", max=len(windows)) as bar:
+        for window in windows[1:]:
+            window_data = window
+            for i in range(1, int((len(window_data)-1)/4)):
+                window_data[i*4+1] = float(window_data[i*4+1]) - float(window_data[1])
+                window_data[i*4+2] = float(window_data[i*4+2]) - float(window_data[2])
+                window_data[i*4+3] = float(window_data[i*4+3]) - float(window_data[3])
+                window_data[i*4+4] = float(window_data[i*4+4]) - float(window_data[4])
+            
+            window_data[1] = 0
+            window_data[2] = 0
+            window_data[3] = 0
+            window_data[4] = 0
+            bar.next()
+            
+    return windows

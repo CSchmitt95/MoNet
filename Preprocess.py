@@ -99,6 +99,13 @@ print()
 #    nulled_windows = PreprocessUtil.differentiateWindows(windows, sensor)
 #    windowed_data.update({ sensor: nulled_windows})
 
+print("Normalisiere Windows...")
+for sensor in sensors:
+    windows = windowed_data.get(sensor)
+    normalized_windows = PreprocessUtil.normalizeWindows(windows)
+    windowed_data.update({ sensor: normalized_windows})
+print()
+
 
 #Kombiniere Alle Sensordaten in Kombo-Klasse
 print("Kombiniere windows...")
