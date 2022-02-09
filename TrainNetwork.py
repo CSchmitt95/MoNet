@@ -81,6 +81,7 @@ for sensorname in os.listdir(DATA_PATH):
 
     callbacks = []
     callbacks.append(tf.keras.callbacks.EarlyStopping(monitor='loss', patience=1500))
+    callbacks.append(tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', baseline=0.05))
 
     history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks, validation_split = 0.1)
     
