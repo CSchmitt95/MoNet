@@ -45,8 +45,9 @@ def saveDistributionGraph(df, filename):
     plt.clf()
 
 
-def writeReport(lerning_rate, number_of_epochs, batch_size, model, filename):
+def writeReport(lerning_rate, number_of_epochs, batch_size, model, filename, movements):
     with open(filename, "w") as text_file:
+        text_file.write("Movements: " + str(movements) + "\n")
         text_file.write("Learning Rate: %s\n" % lerning_rate)
         text_file.write("Number of Epochs: %s\n" % number_of_epochs)
         text_file.write("Batch_size: %s\n" % batch_size)
@@ -59,3 +60,9 @@ def get_model_summary(model: tf.keras.Model) -> str:
     string_list = []
     model.summary(line_length=80, print_fn=lambda x: string_list.append(x))
     return "\n".join(string_list)
+
+
+def saveDistributionGraph32(df, movements, filename):
+    df[movements].sum().plot(kind='bar')
+    plt.savefig(filename, bbox_inches='tight')
+    plt.clf()

@@ -14,7 +14,7 @@ from sklearn.metrics import confusion_matrix
 
 
 #Konstanten
-CURRENT_NAME = "999_Test"
+CURRENT_NAME = "007_Differenziert_AufNull"
 RESULT_DIR = "Results/" + CURRENT_NAME + "/"
 GRAPHS_DIR = RESULT_DIR + "Graphs/"
 MODELS_DIR = RESULT_DIR + "Models/"
@@ -22,8 +22,9 @@ MODELS_DIR = RESULT_DIR + "Models/"
 
 DATA_PATH = "Data/TrainingData/"
 LEARNING_RATE = 0.003
-EPOCHS = 1
+EPOCHS = 7000
 BATCH_SIZE = 1000
+
 
 #Variablen
 datasets = {}
@@ -35,32 +36,35 @@ Path(MODELS_DIR).mkdir(parents=True, exist_ok=True)
 
 #Wir wollen mit den Daten aller Sensoren trainieren...
 for sensorname in os.listdir(DATA_PATH):
+    movements = []
     if sensorname.endswith(".csv"):
         print("Lese Datei " + sensorname + "...")
         file = os.path.join(DATA_PATH, sensorname)
-        df = pd.read_csv(file)
-        #datasets.update({sensorname[:-4] : df_training})
-        movements = df['MovementName'].unique()
+        df = pd.read_csv(file, dtype=np.float32)
+
+        # Raute aus erstem Label entfernen...
+        first_label = df.columns.values.tolist()[0]
+        df.rename({first_label : first_label[2:]}, axis=1, inplace=True)
+
+
+        spalten = len(df.columns)   
+        print(str(spalten) + " splaten... also..." + str (spalten % 1500) + " movements") 
+        movementcount = spalten % 1500
+        movements = df.columns.values.tolist()[0:movementcount]
         print("Movements: " + str(movements))
-
+        
     sensorname = sensorname[:-4]
-    TrainNetworkUtils.saveDistributionGraph(df, GRAPHS_DIR + sensorname + "_distribution_before.png" )
+    TrainNetworkUtils.saveDistributionGraph32(df, movements, GRAPHS_DIR + sensorname + "_distribution_before.png" )
 
-    print("One-Hot Aufbereitung für " + sensorname + "...")
-    for movement in movements:
-        df[movement] = [
-            1 if MovementName == movement else 0 for MovementName in df['MovementName']
-        ]
+    with open(RESULT_DIR + "labels.txt", "w") as labels:
+        for movement in movements:
+            labels.write(movement + "\n")
 
-
-    droplist = ["MovementName"]
-    droplist.extend(movements)
-
-    X = df.drop(droplist, axis=1).astype(np.float32)
+    X = df.drop(movements, axis=1).astype(np.float32)
     Y = df[movements]
     print(Y)
     #Split in Training und Test Daten
-    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.20, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.40, random_state=42)
 
     model = tf.keras.Sequential([ 
     tf.keras.layers.Dense(256, activation='relu'),
@@ -80,7 +84,7 @@ for sensorname in os.listdir(DATA_PATH):
 
 
     callbacks = []
-    callbacks.append(tf.keras.callbacks.EarlyStopping(min_delta=0.07, monitor='loss', patience=500))
+    callbacks.append(tf.keras.callbacks.EarlyStopping(min_delta=0.02, monitor='loss', patience=500))
 
     history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks, validation_split = 0.1)
     

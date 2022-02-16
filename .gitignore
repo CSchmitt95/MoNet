@@ -134,3 +134,4 @@ Data/TrainingData/*
 #MacOS
 */.DS_Store
 .DS_Store
+Results/999_Test/*
