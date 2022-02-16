@@ -96,14 +96,14 @@ with Bar("Aufnahmen", max=number_of_chunks) as bar:
             windowed_data.update({sensor_name : current_windows })
         bar.next()
 print()
-
+'''
 print("Normalisiere Windows...")
 for sensor in sensors:
     windows = windowed_data.get(sensor)
     normalized_windows = PreprocessUtil.normalizeWindows32(windows)
     windowed_data.update({ sensor: normalized_windows})
 print()
-
+'''
 #Kombiniere Alle Sensordaten in Kombo-Klasse
 print("Kombiniere windows...")
 combined_windows, kombo_name = PreprocessUtil.getCombinedWindowsOf32(windowed_data)

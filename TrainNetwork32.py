@@ -14,7 +14,7 @@ from sklearn.metrics import confusion_matrix
 
 
 #Konstanten
-CURRENT_NAME = "007_Differenziert_AufNull"
+CURRENT_NAME = "008_Differenziert_OhneNull"
 RESULT_DIR = "Results/" + CURRENT_NAME + "/"
 GRAPHS_DIR = RESULT_DIR + "Graphs/"
 MODELS_DIR = RESULT_DIR + "Models/"
