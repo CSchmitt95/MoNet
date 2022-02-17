@@ -9,7 +9,6 @@ import copy
 from progress.bar import Bar
 from pyquaternion import Quaternion
 from numba import jit
-import Visualize
 import matplotlib.pyplot as plt
 
 

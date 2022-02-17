@@ -1,20 +1,21 @@
 DATASET = "KleinerSpaziergang"
 OUTPUTPATH = "Data/TrainingData/"
 
-from ast import operator
 import os
 import csv
 import numpy as np
+import pandas as pd
+import PreprocessUtil
+import pprint
+import PreprocessConstants
+import VisualizationUtil
+
+from ast import operator
+from pathlib import Path
 from shutil import move
 from operator import itemgetter
 from matplotlib.pyplot import get
-import pandas as pd
-import PreprocessUtil
 from progress.bar import Bar
-import pprint
-from pathlib import Path
-import PreprocessConstants
-
 
 #Liste, die alle CSV datein einliest.
 complete_data = []
@@ -66,8 +67,8 @@ if number_of_chunks%1 != 0.0:
     print("Das hier sollte eine Ganze zahl sein: " + str(number_of_chunks) + " ... " + str())
     exit()
 
-print("Bilde Differenzquaternionen...")
-PreprocessUtil.differentiateCorrectly(complete_data)
+#print("Bilde Differenzquaternionen...")
+#PreprocessUtil.differentiateCorrectly(complete_data)
 
 windowed_data = {}
 for i in range (0, sensorcount):
@@ -89,21 +90,18 @@ with Bar("Aufnahmen", max=number_of_chunks) as bar:
             sensor_name = line[1]
             current_windows = windowed_data.get(sensor_name)
             new_windows = PreprocessUtil.getWindowsFromLine32(line, movements) 
-            #print()
-            #print(new_windows)           
-            #print(new_windows.shape)
             current_windows = np.concatenate((current_windows, new_windows), axis=0)
             windowed_data.update({sensor_name : current_windows })
         bar.next()
 print()
-'''
-print("Normalisiere Windows...")
-for sensor in sensors:
-    windows = windowed_data.get(sensor)
-    normalized_windows = PreprocessUtil.normalizeWindows32(windows)
-    windowed_data.update({ sensor: normalized_windows})
-print()
-'''
+
+#print("Nulle Windows an erster Quaternion...")
+#for sensor in sensors:
+#    windows = windowed_data.get(sensor)
+#    normalized_windows = PreprocessUtil.normalizeWindows32(windows)
+#    windowed_data.update({ sensor: normalized_windows})
+#print()
+
 #Kombiniere Alle Sensordaten in Kombo-Klasse
 print("Kombiniere windows...")
 combined_windows, kombo_name = PreprocessUtil.getCombinedWindowsOf32(windowed_data)
