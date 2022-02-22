@@ -47,7 +47,7 @@ def plotQuaternions(title, window, counter):
         label='z'
     )
     plt.title(title, size=20)
-    plt.ylim(bottom=-1,top=1)
+    plt.ylim(bottom=-1.1,top=1.1)
     plt.legend()
 
 

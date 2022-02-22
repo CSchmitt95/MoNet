@@ -1,0 +1,28 @@
+Notes:
+-Himmelsrichtungsabhängigkeit bei nicht gedifften Daten.
+-Gediffte daten werden viel besser klassifiziert. Aber stolpern nur sehr geringe ausschläge....
+-Nicht gediffte Daten sehr all over the place.
+
+
+
+
+
+ToDo:
+-Himmelsrichtung Unabhängigkeit Prüfen.
+    -Aufnahmen in alle 4 Richtungen machen.
+    -Netz Trainieren.
+    -Gucken ob er die richtungen auseinander halten kann... (Möglicherweise die Achse Maskieren... wenn das geht...)
+
+
+Android:
+    -Labels.txt richtig einbinden.
+    -Modell von Disk laden lassen.
+    -ES SOLLTE EINE WARNUNG BEI VERBINDUNGSVERLUST GEBEN!
+    
+    -Mit Device Controller auf Telefon zurgreifen können.
+
+    -Struktur und responsiveness verbessern
+        -MMVC Spaltung
+        -Sensordaten Threadsave speichern
+        -Sensordaten an Sensor gekoppelt speichern.
+        
