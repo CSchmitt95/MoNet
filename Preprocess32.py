@@ -95,12 +95,12 @@ with Bar("Aufnahmen", max=number_of_chunks) as bar:
         bar.next()
 print()
 
-#print("Nulle Windows an erster Quaternion...")
-#for sensor in sensors:
-#    windows = windowed_data.get(sensor)
-#    normalized_windows = PreprocessUtil.normalizeWindows32(windows)
-#    windowed_data.update({ sensor: normalized_windows})
-#print()
+print("Nulle Windows an erster Quaternion...")
+for sensor in sensors:
+    windows = windowed_data.get(sensor)
+    normalized_windows = PreprocessUtil.normalizeWindows32(windows)
+    windowed_data.update({ sensor: normalized_windows})
+print()
 
 #Kombiniere Alle Sensordaten in Kombo-Klasse
 print("Kombiniere windows...")
