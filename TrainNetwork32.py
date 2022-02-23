@@ -15,7 +15,7 @@ from sklearn.metrics import confusion_matrix
 
 
 #Konstanten
-CURRENT_NAME = "011_NoDiff_Null"
+CURRENT_NAME = "021_Diff_Null"
 RESULT_DIR = "Results/" + CURRENT_NAME + "/"
 VIS_DIR = RESULT_DIR + "DataVis/"
 GRAPHS_DIR = RESULT_DIR + "Graphs/"
@@ -81,7 +81,7 @@ for sensorname in os.listdir(DATA_PATH):
         tf.keras.layers.Dense(256, activation='relu'),
         tf.keras.layers.Dense(128, activation='relu'),
         tf.keras.layers.Dense(64, activation='relu'),
-        tf.keras.layers.Dense(3, activation='softmax')
+        tf.keras.layers.Dense(3, activation='sigmoid')
         ])
 
         model.compile(
