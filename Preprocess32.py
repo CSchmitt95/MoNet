@@ -67,8 +67,8 @@ if number_of_chunks%1 != 0.0:
     print("Das hier sollte eine Ganze zahl sein: " + str(number_of_chunks) + " ... " + str())
     exit()
 
-print("Bilde Differenzquaternionen...")
-PreprocessUtil.differentiateCorrectly(complete_data)
+#print("Bilde Differenzquaternionen...")
+#PreprocessUtil.differentiateCorrectly(complete_data)
 
 windowed_data = {}
 for i in range (0, sensorcount):
