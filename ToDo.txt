@@ -4,25 +4,11 @@ Notes:
 -Nicht gediffte Daten sehr all over the place.
 
 
+Todo bis nächste woche
+-Optimierungsschritte
+    -Netze logisch verknpüfen.
+    -Not Sure klasse
 
+-Android Kapite
 
-
-ToDo:
--Himmelsrichtung Unabhängigkeit Prüfen.
-    -Aufnahmen in alle 4 Richtungen machen.
-    -Netz Trainieren.
-    -Gucken ob er die richtungen auseinander halten kann... (Möglicherweise die Achse Maskieren... wenn das geht...)
-
-
-Android:
-    -Labels.txt richtig einbinden.
-    -Modell von Disk laden lassen.
-    -ES SOLLTE EINE WARNUNG BEI VERBINDUNGSVERLUST GEBEN!
-    
-    -Mit Device Controller auf Telefon zurgreifen können.
-
-    -Struktur und responsiveness verbessern
-        -MMVC Spaltung
-        -Sensordaten Threadsave speichern
-        -Sensordaten an Sensor gekoppelt speichern.
-        
+(Optional) -Andere Person testen.
