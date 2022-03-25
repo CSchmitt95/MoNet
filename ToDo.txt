@@ -9,6 +9,6 @@ Todo bis nächste woche
     -Netze logisch verknpüfen.
     -Not Sure klasse
 
--Android Kapite
+-Android Kapitel
 
 (Optional) -Andere Person testen.
