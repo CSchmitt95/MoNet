@@ -1,4 +1,4 @@
-,Gehen,Stehen,Stolpern
-Gehen,0,8,2
-Stehen,0,114,6
-Stolpern,0,0,100
+,Stolpern,Gehen,Stehen
+Stolpern,0,8,2
+Gehen,0,114,6
+Stehen,0,0,100

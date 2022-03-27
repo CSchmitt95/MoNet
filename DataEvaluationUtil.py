@@ -14,7 +14,7 @@ def saveConfusionMatrix(name, cm_df, filename):
     plt.title(name)
     plt.ylabel('Actal Values')
     plt.xlabel('Predicted Values')
-    accuracy_text = "Accuracy: " + "{:4.2f}".format(getAccuracy(cm_df)) + "%"
+    accuracy_text = "Accuracy: " + "{:4.2f}".format(getAccuracy(cm_df, True)) + "% / (" + "{:4.2f}".format(getAccuracy(cm_df, False))+")"
     stolpern_text = "Stolpern\n Sens: " + str(getSensitivity(cm_df, 0)) + "% \n Spez: " + "{:4.2f}".format(getSpecificity(cm_df,0)) + "%\n"
     gehen_text = "Gehen\n Sens: " + str(getSensitivity(cm_df, 1)) + "% \n Spez: " + "{:4.2f}".format(getSpecificity(cm_df,1)) + "%\n"
     stehen_text = "Stehen\n Sens: " + str(getSensitivity(cm_df, 2)) + "% \n Spez: " + "{:4.2f}".format(getSpecificity(cm_df,2)) + "%\n"
@@ -52,10 +52,13 @@ def getSpecificity(df, index):
         return 0
     return ret
 
-def getAccuracy(df):
+def getAccuracy(df,removedontknow):
     whole = df.to_numpy()
     diagonal_sum = whole.trace()
     sum_x = whole.sum(axis = 1)
     sum = sum_x.sum()
+    if('DontKnow' in df.columns and removedontknow == True):
+        print("Dont know aus accuracy entfernen.")
+        sum -= df['DontKnow'].sum()
     ret = diagonal_sum*100 / sum
     return ret
