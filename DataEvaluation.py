@@ -6,8 +6,15 @@ import DataEvaluationUtil as dataUtils
 import os
 import numpy as np
 
-input_dir = "EvaluationResults/csv/"
-output_dir = "EvaluationResults/png/"
+#input_dir = "EvaluationResults/csv/"
+#output_dir = "EvaluationResults/png/"
+
+ROOT = "EvaluationResults/"
+INPUT_FOLDER = input("Welche Daten sollen visualisiert werden?")
+
+input_dir = ROOT + INPUT_FOLDER
+output_dir = input_dir+"/"
+
 filecounter = 0
 for filename in os.listdir(input_dir):
     if filename.endswith(".csv"):

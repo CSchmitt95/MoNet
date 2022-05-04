@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 #Trainingdata
-Data/TrainingData/*
+Data/ProcessedData/*
 
 #MacOS
 */.DS_Store

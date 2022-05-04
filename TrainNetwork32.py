@@ -1,3 +1,4 @@
+from fileinput import filename
 import TrainNetworkUtils
 import os
 import csv
@@ -15,14 +16,16 @@ from sklearn.metrics import confusion_matrix
 
 
 #Konstanten
-CURRENT_NAME = "011_NoDiff_Null"
-RESULT_DIR = "Results/" + CURRENT_NAME + "/"
+CURRENT_NAME = input("Mit welchem Datensatz soll trainiert werden?")
+SUFFIX = input("Welches Suffix soll für die Asugabe verwendet werden?")
+RESULT_DIR = "TrainingResults/" + CURRENT_NAME + "_" + SUFFIX + "/"
 VIS_DIR = RESULT_DIR + "DataVis/"
 GRAPHS_DIR = RESULT_DIR + "Graphs/"
 MODELS_DIR = RESULT_DIR + "Models/"
 
 
-DATA_PATH = "Data/TrainingData/"
+DATA_PATH = "Data/ProcessedData/"
+FILE_PATH = DATA_PATH+CURRENT_NAME+"/"
 LEARNING_RATE = 0.003
 EPOCHS = 7000
 BATCH_SIZE = 1000
@@ -39,11 +42,11 @@ Path(VIS_DIR).mkdir(parents=True, exist_ok=True)
 
 
 #Wir wollen mit den Daten aller Sensoren trainieren...
-for sensorname in os.listdir(DATA_PATH):
+for sensorname in os.listdir(FILE_PATH):
     movements = []
-    if sensorname.endswith(".csv"):
+    if sensorname.endswith(".csv") and sensorname != "distribution.csv":
         print("Lese Datei " + sensorname + "...")
-        file = os.path.join(DATA_PATH, sensorname)
+        file = os.path.join(FILE_PATH, sensorname)
         df = pd.read_csv(file, dtype=np.float32)
 
         # Raute aus erstem Label entfernen...
@@ -56,32 +59,32 @@ for sensorname in os.listdir(DATA_PATH):
         movementcount = spalten % 1500
         movements = df.columns.values.tolist()[0:movementcount]
         print("Movements: " + str(movements))
-        #Für Alle Movements eine Beispielvisualisierung Abspeichern
-        for movement in movements:
-                movement_samples = df.loc[df[movement] == 1.0]
-                random_sample = movement_samples.sample(n=1)
-                VisualizationUtil.prepare(movement, random_sample.values.tolist()[0], 0)
-                plt.savefig(VIS_DIR + "/" + sensorname[:-4] + "_" + movement + ".png" )    
-                plt.clf()
-
-        sensorname = sensorname[:-4]
-        TrainNetworkUtils.saveDistributionGraph32(df, movements, GRAPHS_DIR + sensorname + "_distribution_before.png" )
+        ##Für Alle Movements eine Beispielvisualisierung Abspeichern
+        #for movement in movements:
+        #        movement_samples = df.loc[df[movement] == 1.0]
+        #        random_sample = movement_samples.sample(n=1)
+        #        VisualizationUtil.prepare(movement, random_sample.values.tolist()[0], 0)
+        #        plt.savefig(VIS_DIR + "/" + sensorname[:-4] + "_" + movement + ".png" )    
+        #        plt.clf()
+        #
+        #sensorname = sensorname[:-4]
+        #TrainNetworkUtils.saveDistributionGraph32(df, movements, GRAPHS_DIR + sensorname + "_distribution_before.png" )
 
         with open(RESULT_DIR + "labels.txt", "w") as labels:
             for movement in movements:
                 labels.write(movement + "\n")
 
-        X = df.drop(movements, axis=1).astype(np.float32)
-        Y = df[movements]
-        print(Y)
+        X_train = df.drop(movements, axis=1).astype(np.float32)
+        y_train = df[movements]
+        #print(Y)
         #Split in Training und Test Daten
-        X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.40, random_state=42)
+        #X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0, random_state=42)
 
         model = tf.keras.Sequential([ 
         tf.keras.layers.Dense(256, activation='relu'),
         tf.keras.layers.Dense(128, activation='relu'),
         tf.keras.layers.Dense(64, activation='relu'),
-        tf.keras.layers.Dense(3, activation='sigmoid')
+        tf.keras.layers.Dense(3, activation='softmax')
         ])
 
         model.compile(
@@ -97,22 +100,15 @@ for sensorname in os.listdir(DATA_PATH):
         callbacks = []
         callbacks.append(tf.keras.callbacks.EarlyStopping(min_delta=0.02, monitor='loss', patience=500))
 
-        history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks, validation_split = 0.1)
-        
+        history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks)
+        history_df = pd.DataFrame(history.history)
+        history_df.to_csv(GRAPHS_DIR + sensorname + "_history.csv")
+
         TrainNetworkUtils.writeReport(LEARNING_RATE, EPOCHS, BATCH_SIZE, model, RESULT_DIR + "Parameters.txt", movements)
 
 
         model.save(MODELS_DIR + sensorname)
-
-        TrainNetworkUtils.saveHistoryGraph(history, GRAPHS_DIR + sensorname + "_history.png")
-
-        predictions_onehot = model.predict(X_test)
-        y_test_onehot = y_test
-        y_test_cm = y_test_onehot.values.argmax(axis=1)
-        y_pred_cm = predictions_onehot.argmax(axis=1)
-        cm = confusion_matrix(y_test_cm, y_pred_cm)
-        cm_df = pd.DataFrame(cm, index = movements, columns =movements)
-        TrainNetworkUtils.saveConfusionMatrix(cm_df, GRAPHS_DIR + sensorname + "_confusion.png")
+        TrainNetworkUtils.saveHistoryGraph(history, GRAPHS_DIR + sensorname)
 
         converter = tf.lite.TFLiteConverter.from_keras_model(model)
         tflite_model = converter.convert()

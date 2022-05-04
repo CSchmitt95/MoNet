@@ -22,12 +22,18 @@ def saveHistoryGraph(history, filename):
         np.arange(1, x), 
         history.history['recall'], label='Recall'
     )
-    plt.title('Evaluation metrics', size=20)
-    plt.xlabel('Epoch', size=14)
+    plt.title('Trainingsverlauf', size=20)
+    plt.xlabel('Epoche', size=14)
     plt.ylim(0, 1.5)
     plt.legend()
-    plt.savefig(filename, bbox_inches='tight')
+    plt.savefig(filename + "_history.png", bbox_inches='tight')
     plt.clf() 
+    with open(filename + "_stats.txt", "w") as text_file:
+        text_file.write("Final Stats:\n")
+        text_file.write("Loss: " + str(history.history['loss'][len(history.history['loss'])-1]) + "\n")
+        text_file.write("Accuracy: " + str(history.history['accuracy'][len(history.history['accuracy'])-1]) + "\n")
+        text_file.write("Precision: " + str(history.history['precision'][len(history.history['precision'])-1]) + "\n")
+        text_file.write("Recall: " + str(history.history['recall'][len(history.history['recall'])-1]) + "\n")
 
 
 def saveConfusionMatrix(cm_df, filename):

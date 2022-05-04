@@ -20,14 +20,16 @@ from progress.bar import Bar
 #Liste, die alle CSV datein einliest.
 complete_data = []
 
-print("Bitte Datensatz Namen angeben")
-DATASET = input()
+#print("Bitte Datensatz Namen angeben")
+DATASET = input("Welcher Datensatz soll verarbeitet werden?")
+SUFFIX = input("Welches Suffix soll für die Ausgabe verwendet werden?")
+OUTPUT = DATASET + "_" + SUFFIX
 
-print("Bitte Ausgabenamen angeben")
-OUTPUTNAME = input()
+
+#OUTPUTNAME = input("Welcher Datensatz soll verarbeitet werden?")
 
 
-Path(OUTPUT_PATH+"/"+OUTPUTNAME).mkdir(parents=True, exist_ok=True)
+Path(OUTPUT_PATH+"/"+OUTPUT).mkdir(parents=True, exist_ok=True)
 
 
 print("Einlesen:")
@@ -75,8 +77,8 @@ if number_of_recordings%1 != 0.0:
     print("Das hier sollte eine Ganze zahl sein: " + str(number_of_recordings) + " ... " + str())
     exit()
 
-#print("Bilde Differenzquaternionen...")
-#PreprocessUtil.differentiateCorrectly(complete_data)
+print("Bilde Differenzquaternionen...")
+PreprocessUtil.differentiateCorrectly(complete_data)
 
 windowed_data = {}
 for i in range (0, sensorcount):
@@ -121,4 +123,14 @@ print("")
 print("Schreibe CSVs...")
 for sensor in sensors:
     writing_windows = windowed_data.get(sensor)
-    PreprocessUtil.writeWindowsToFile32(windowed_data.get(sensor), OUTPUT_PATH + "/" + OUTPUTNAME + "/" + sensor + ".csv", movements)
+    PreprocessUtil.writeWindowsToFile32(windowed_data.get(sensor), OUTPUT_PATH + "/" + OUTPUT + "/" + sensor + ".csv", movements)
+
+
+#Für Alle Movements Verteilung bestimmen.
+windowsOfSensor0 = windowed_data.get(sensors[0])
+distribution = windowsOfSensor0[:,0:len(movements)]
+distribution_count = np.sum(distribution,axis=0)
+distribution_count = [distribution_count]
+print(distribution_count)
+df_distribution = pd.DataFrame(distribution_count, columns=movements)
+df_distribution.to_csv( OUTPUT_PATH + OUTPUT + "/distribution.csv")
