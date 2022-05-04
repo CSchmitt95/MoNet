@@ -1,5 +1,5 @@
-DATASET = "KleinerSpaziergang"
-OUTPUTPATH = "Data/TrainingData/"
+INPUT_PATH = "Data/RecordedData/"
+OUTPUT_PATH = "Data/ProcessedData/"
 
 import os
 import csv
@@ -20,12 +20,20 @@ from progress.bar import Bar
 #Liste, die alle CSV datein einliest.
 complete_data = []
 
-Path(OUTPUTPATH).mkdir(parents=True, exist_ok=True)
+print("Bitte Datensatz Namen angeben")
+DATASET = input()
+
+print("Bitte Ausgabenamen angeben")
+OUTPUTNAME = input()
+
+
+Path(OUTPUT_PATH+"/"+OUTPUTNAME).mkdir(parents=True, exist_ok=True)
+
 
 print("Einlesen:")
 
 #Erst werden alle CSV Daten gelesen. Jede Zeile ist eine Reihe von Daten. Die noch zerteilt werden muss und gegebenenfalls mit dem anderen Sensor kombiniert werden muss.
-directory = "Data/RecordedData/" + DATASET + '/'
+directory = INPUT_PATH + DATASET + '/'
 filecounter = 0
 for filename in os.listdir(directory):
     if filename.endswith(".csv"):
@@ -113,4 +121,4 @@ print("")
 print("Schreibe CSVs...")
 for sensor in sensors:
     writing_windows = windowed_data.get(sensor)
-    PreprocessUtil.writeWindowsToFile32(windowed_data.get(sensor), OUTPUTPATH + sensor + ".csv", movements)
+    PreprocessUtil.writeWindowsToFile32(windowed_data.get(sensor), OUTPUT_PATH + "/" + OUTPUTNAME + "/" + sensor + ".csv", movements)

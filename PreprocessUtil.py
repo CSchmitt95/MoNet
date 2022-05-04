@@ -8,7 +8,6 @@ import csv
 import copy
 from progress.bar import Bar
 from pyquaternion import Quaternion
-from numba import jit
 import matplotlib.pyplot as plt
 
 
@@ -63,7 +62,6 @@ def generateWindowHeader(sensor_number):
     return header
 
 
-@jit(nopython=True)
 def differentiateWindows(windows, name):
     with Bar(name, max=len(windows)) as bar:
         for window in windows[1:]:
@@ -97,7 +95,6 @@ def differentiateCorrectly(lines):
                 bar.next()
         line[3:] = data
             
-@jit(nopython=True)
 def getCombinedWindowsOf(windowed_data):
     sensors = windowed_data.keys()
     output_windows = []
