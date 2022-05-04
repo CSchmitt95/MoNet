@@ -25,7 +25,7 @@ Path(OUTPUTPATH).mkdir(parents=True, exist_ok=True)
 print("Einlesen:")
 
 #Erst werden alle CSV Daten gelesen. Jede Zeile ist eine Reihe von Daten. Die noch zerteilt werden muss und gegebenenfalls mit dem anderen Sensor kombiniert werden muss.
-directory = "Data/DataSets/" + DATASET + '/'
+directory = "Data/RecordedData/" + DATASET + '/'
 filecounter = 0
 for filename in os.listdir(directory):
     if filename.endswith(".csv"):
@@ -61,10 +61,10 @@ print()
 
 
 #Konsistenzcheck
-number_of_chunks = len(complete_data)/sensorcount
-if number_of_chunks%1 != 0.0:
+number_of_recordings = len(complete_data)/sensorcount
+if number_of_recordings%1 != 0.0:
     print("FEHLER:")
-    print("Das hier sollte eine Ganze zahl sein: " + str(number_of_chunks) + " ... " + str())
+    print("Das hier sollte eine Ganze zahl sein: " + str(number_of_recordings) + " ... " + str())
     exit()
 
 #print("Bilde Differenzquaternionen...")
@@ -76,9 +76,9 @@ for i in range (0, sensorcount):
 print()
 
 print("Generiere Windows...")
-with Bar("Aufnahmen", max=number_of_chunks) as bar:
+with Bar("Aufnahmen", max=number_of_recordings) as bar:
     #Für Jedes Sensorpaar
-    for i in range(0, int(number_of_chunks)):
+    for i in range(0, int(number_of_recordings)):
         movement_name = complete_data[i*sensorcount][0]
         #Für jeden Sensor im Datenpaar
         for j in range (0, sensorcount):
