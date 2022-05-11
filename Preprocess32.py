@@ -113,11 +113,12 @@ for sensor in sensors:
 print()
 
 #Kombiniere Alle Sensordaten in Kombo-Klasse
-print("Kombiniere windows...")
-combined_windows, kombo_name = PreprocessUtil.getCombinedWindowsOf32(windowed_data)
-windowed_data.update({kombo_name : combined_windows})
-sensors.append(kombo_name)
-print("")
+if sensorcount > 1:
+    print("Kombiniere windows...")
+    combined_windows, kombo_name = PreprocessUtil.getCombinedWindowsOf32(windowed_data)
+    windowed_data.update({kombo_name : combined_windows})
+    sensors.append(kombo_name)
+    print()
 
 #Daten in die CSVs schreiben.
 print("Schreibe CSVs...")
