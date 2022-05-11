@@ -102,15 +102,15 @@ for sensorname in os.listdir(FILE_PATH):
 
         history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks)
         history_df = pd.DataFrame(history.history)
-        history_df.to_csv(GRAPHS_DIR + sensorname + "_history.csv")
+        history_df.to_csv(GRAPHS_DIR + sensorname[:-4] + "_history.csv")
 
         TrainNetworkUtils.writeReport(LEARNING_RATE, EPOCHS, BATCH_SIZE, model, RESULT_DIR + "Parameters.txt", movements)
 
 
-        model.save(MODELS_DIR + sensorname)
-        TrainNetworkUtils.saveHistoryGraph(history, GRAPHS_DIR + sensorname)
+        model.save(MODELS_DIR + sensorname[:-4])
+        TrainNetworkUtils.saveHistoryGraph(history, GRAPHS_DIR + sensorname[:-4])
 
         converter = tf.lite.TFLiteConverter.from_keras_model(model)
         tflite_model = converter.convert()
-        with open (MODELS_DIR + sensorname + ".tflite", 'wb') as f:
+        with open (MODELS_DIR + sensorname[:-4] + ".tflite", 'wb') as f:
             f.write(tflite_model)

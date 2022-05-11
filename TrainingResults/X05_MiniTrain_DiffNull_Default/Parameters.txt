@@ -1,0 +1,23 @@
+Movements: ['Stehen', 'Gehen', 'Stolpern']
+Learning Rate: 0.003
+Number of Epochs: 7000
+Batch_size: 1000
+
+Model Summary: 
+Model: "sequential_2"
+________________________________________________________________________________
+ Layer (type)                       Output Shape                    Param #     
+================================================================================
+ dense_8 (Dense)                    (None, 256)                     384256      
+                                                                                
+ dense_9 (Dense)                    (None, 128)                     32896       
+                                                                                
+ dense_10 (Dense)                   (None, 64)                      8256        
+                                                                                
+ dense_11 (Dense)                   (None, 3)                       195         
+                                                                                
+================================================================================
+Total params: 425,603
+Trainable params: 425,603
+Non-trainable params: 0
+________________________________________________________________________________

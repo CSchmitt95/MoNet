@@ -1,4 +1,4 @@
-INPUT_PATH = "Data/RecordedData/"
+INPUT_PATH = "Data/ExportedData/"
 OUTPUT_PATH = "Data/ProcessedData/"
 
 import os
@@ -35,7 +35,7 @@ Path(OUTPUT_PATH+"/"+OUTPUT).mkdir(parents=True, exist_ok=True)
 print("Einlesen:")
 
 #Erst werden alle CSV Daten gelesen. Jede Zeile ist eine Reihe von Daten. Die noch zerteilt werden muss und gegebenenfalls mit dem anderen Sensor kombiniert werden muss.
-directory = INPUT_PATH + DATASET + '/'
+directory = INPUT_PATH + DATASET + '/records/'
 filecounter = 0
 for filename in os.listdir(directory):
     if filename.endswith(".csv"):

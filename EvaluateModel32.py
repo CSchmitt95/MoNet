@@ -28,7 +28,7 @@ Path(RESULT_DIR).mkdir(parents=True, exist_ok=True)
 
 for sensorname in os.listdir(DATA_PATH):
     movements = []
-    if sensorname.endswith(".csv"):
+    if sensorname.endswith(".csv") and sensorname != "distribution.csv":
         print("Lese Datei " + sensorname + "...")
         file = os.path.join(DATA_PATH, sensorname)
         df = pd.read_csv(file, dtype=np.float32)
