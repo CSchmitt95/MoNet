@@ -1,0 +1,24 @@
+Synth:
+Synth:
+    96
+    92,33
+    85,33
+    91,67
+    78,67
+    82,67
+
+    Durchschnitt: 88,8% Genauigkeit.
+        sqrt(((96-88,8)^2+(92,33-88,8)^2+(85,33-88,8)^2+(91,67-88,8)^2+(78,67-88,8)^2)/5)
+    Varianz = 37,43912
+    Standardabweichung: 6,1187515066
+
+Real:
+    96,01
+    88,67
+    94,67
+    96,67
+    96,33
+
+    Durchschnitt:       94,47
+    Varianz:            8,87024
+    Standardabweichung: 2,9782948142

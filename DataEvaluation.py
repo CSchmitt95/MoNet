@@ -12,7 +12,7 @@ import numpy as np
 ROOT = "EvaluationResults/"
 INPUT_FOLDER = input("Welche Daten sollen visualisiert werden?")
 
-input_dir = ROOT + INPUT_FOLDER
+input_dir = INPUT_FOLDER #ROOT + INPUT_FOLDER
 output_dir = input_dir+"/"
 
 filecounter = 0

@@ -36,7 +36,7 @@ for sensorname in os.listdir(DATA_PATH):
         # Raute aus erstem Label entfernen...
         first_label = df.columns.values.tolist()[0]
         df.rename({first_label : first_label[2:]}, axis=1, inplace=True)
-
+        
 
         spalten = len(df.columns)   
         print(str(spalten) + " splaten... also..." + str (spalten % 1500) + " movements") 
@@ -44,6 +44,12 @@ for sensorname in os.listdir(DATA_PATH):
         movements = df.columns.values.tolist()[0:movementcount]
         print("Movements: " + str(movements))        
         
+        movements.sort()
+        cols_to_move = movements
+        df           = df[ cols_to_move + [ col for col in df.columns if col not in cols_to_move ] ]
+        
+        print(df)
+
         X_test = df.drop(movements, axis=1).astype(np.float32)
         y_test = df[movements]
 
