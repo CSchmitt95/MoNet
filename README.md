@@ -27,3 +27,5 @@ Für jedes Modell wird eine Konfusionsmatrix in einer CSV Datei erstellt.
 Achtung:
 Die Datensätze mit den Namen 0VX enthalten die Daten für die Finalen Versuche.
 Aber da für die Präsentation der Ergebnisse die Reihenfolge der Versuche verändert wurde und auch manche Ergebnisse aufgeteilt wurden, darf man nicht von der Versuchnummer aus der Arbeit auf den Namen in diesem Repository schließen.
+
+Auch sind einige der Datensätze nicht miteinenader Kompatibel, da sich die Bezeichnungen der Sensoren bezüglich der Benutzung von Umlauten verändert haben.

@@ -19,8 +19,8 @@ TEST_DATA = input("Welcher Datensatz soll verwendet werden?")
 DATA_PATH = "Data/ProcessedData/"+ TEST_DATA + "/"
 
 MODEL_DIR = "TrainingResults/" + MODEL_NAME + "/"
-RESULT_ROOT = "EvaluationResults/" + MODEL_NAME + "/"
-RESULT_DIR = RESULT_ROOT + "/" + TEST_DATA + "/"
+RESULT_ROOT = "TrainingResults/" + MODEL_NAME + "/"
+RESULT_DIR = RESULT_ROOT + "/" +"EvaluationResults/" + TEST_DATA + "/"
 
 #Mkdir für wichtige Ordner.
 Path(RESULT_ROOT).mkdir(parents=True, exist_ok=True)
