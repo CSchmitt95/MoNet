@@ -1,4 +1,4 @@
-import TrainNetworkUtils
+import TrainModelUtils
 import os
 import csv
 import pandas as pd
@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from shutil import move
-from TrainNetworkUtils import saveHistoryGraph
+from TrainModelUtils import saveHistoryGraph
 from pathlib import Path
 
 from sklearn.model_selection import train_test_split
@@ -44,7 +44,7 @@ for sensorname in os.listdir(DATA_PATH):
         print("Movements: " + str(movements))
 
     sensorname = sensorname[:-4]
-    TrainNetworkUtils.saveDistributionGraph(df, GRAPHS_DIR + sensorname + "_distribution_before.png" )
+    TrainModelUtils.saveDistributionGraph(df, GRAPHS_DIR + sensorname + "_distribution_before.png" )
 
     print("One-Hot Aufbereitung für " + sensorname + "...")
     for movement in movements:
@@ -84,12 +84,12 @@ for sensorname in os.listdir(DATA_PATH):
 
     history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks, validation_split = 0.1)
     
-    TrainNetworkUtils.writeReport(LEARNING_RATE, EPOCHS, BATCH_SIZE, model, RESULT_DIR + "Parameters.txt", movements)
+    TrainModelUtils.writeReport(LEARNING_RATE, EPOCHS, BATCH_SIZE, model, RESULT_DIR + "Parameters.txt", movements)
 
 
     model.save(MODELS_DIR + sensorname)
 
-    TrainNetworkUtils.saveHistoryGraph(history, GRAPHS_DIR + sensorname + "_history.png")
+    TrainModelUtils.saveHistoryGraph(history, GRAPHS_DIR + sensorname + "_history.png")
 
     predictions_onehot = model.predict(X_test)
     y_test_onehot = y_test
@@ -97,7 +97,7 @@ for sensorname in os.listdir(DATA_PATH):
     y_pred_cm = predictions_onehot.argmax(axis=1)
     cm = confusion_matrix(y_test_cm, y_pred_cm)
     cm_df = pd.DataFrame(cm, index = movements, columns =movements)
-    TrainNetworkUtils.saveConfusionMatrix(cm_df, GRAPHS_DIR + sensorname + "_confusion.png")
+    TrainModelUtils.saveConfusionMatrix(cm_df, GRAPHS_DIR + sensorname + "_confusion.png")
 
     converter = tf.lite.TFLiteConverter.from_keras_model(model)
     tflite_model = converter.convert()

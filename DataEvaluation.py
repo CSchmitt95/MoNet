@@ -1,7 +1,7 @@
 from operator import index
 import matplotlib.pyplot as plt
 import pandas as pd
-import TrainNetworkUtils as trainUtils
+import TrainModelUtils as trainUtils
 import DataEvaluationUtil as dataUtils
 import os
 import numpy as np

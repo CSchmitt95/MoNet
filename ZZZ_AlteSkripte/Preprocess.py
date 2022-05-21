@@ -9,7 +9,7 @@ from shutil import move
 from operator import itemgetter
 from matplotlib.pyplot import get
 import pandas as pd
-import PreprocessUtil
+import PreprocessDataUtil
 from progress.bar import Bar
 import pprint
 from pathlib import Path
@@ -63,14 +63,14 @@ if number_of_chunks%1 != 0.0:
     exit()
 
 print("Bilde Differenzquaternionen...")
-PreprocessUtil.differentiateCorrectly(complete_data)
+PreprocessDataUtil.differentiateCorrectly(complete_data)
 
 #Generiere Output Dictionary und passende Header
 print("Generiere Output Dictionary")
 print("Schreibe Header...")
 windowed_data = {}
 for i in range (0, sensorcount):
-    windowed_data.update({sensors[i] : [PreprocessUtil.generateWindowHeader(0)]})
+    windowed_data.update({sensors[i] : [PreprocessDataUtil.generateWindowHeader(0)]})
 print()
 
 #Fülle Output Dictionary
@@ -86,7 +86,7 @@ with Bar("Aufnahmen", max=number_of_chunks) as bar:
                 exit()
             sensor_name = line[1]
             current_windows = windowed_data.get(sensor_name)
-            new_windows = PreprocessUtil.getWindowsFromLine(line)
+            new_windows = PreprocessDataUtil.getWindowsFromLine(line)
             current_windows.extend(new_windows)
             windowed_data.update({sensor_name : current_windows })
         bar.next()
@@ -102,14 +102,14 @@ print()
 print("Normalisiere Windows...")
 for sensor in sensors:
     windows = windowed_data.get(sensor)
-    normalized_windows = PreprocessUtil.normalizeWindows(windows)
+    normalized_windows = PreprocessDataUtil.normalizeWindows(windows)
     windowed_data.update({ sensor: normalized_windows})
 print()
 
 
 #Kombiniere Alle Sensordaten in Kombo-Klasse
 print("Kombiniere windows...")
-combined_windows, kombo_name = PreprocessUtil.getCombinedWindowsOf32(windowed_data)
+combined_windows, kombo_name = PreprocessDataUtil.getCombinedWindowsOf32(windowed_data)
 windowed_data.update({"Kombo" : combined_windows})
 sensors.append("Kombo")
 print("")
@@ -119,4 +119,4 @@ print("")
 print("Schreibe CSVs...")
 for sensor in sensors:
     writing_windows = windowed_data.get(sensor)
-    PreprocessUtil.writeWindowsToFile(windowed_data.get(sensor), OUTPUTPATH + sensor + ".csv")
+    PreprocessDataUtil.writeWindowsToFile(windowed_data.get(sensor), OUTPUTPATH + sensor + ".csv")
