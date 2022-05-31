@@ -27,10 +27,10 @@ Die Datensätze mit den Namen 0VX enthalten die Daten für die Finalen Versuche.
 Aber da für die Präsentation der Ergebnisse die Reihenfolge der Versuche verändert wurde und auch manche Ergebnisse aufgeteilt wurden, darf man nicht von der Versuchsnummer aus der Arbeit auf den Namen in diesem Repository schließen.
 
 Eine kurze Übersicht: 
-Versuch 1 Laufzeit und Versuch 5 Echtzeit-Laufzeit beziehen ihre daten aus 0V2
-Versuch 2 Speicherauslastung bezieht seine Daten aus 0V1
-Versuch 3 Vorverarbeitung bezieht seine daten aus 0V5
-Versuch 4 Sensorposition bezieht seine daten aus 0V6
-Versuch 5 Echtzeit Evaluation bezieht seine Daten auch aus 0V6
+- Versuch 1 Laufzeit und Versuch 5 Echtzeit-Laufzeit beziehen ihre daten aus 0V2
+- Versuch 2 Speicherauslastung bezieht seine Daten aus 0V1
+- Versuch 3 Vorverarbeitung bezieht seine daten aus 0V5
+- Versuch 4 Sensorposition bezieht seine daten aus 0V6
+- Versuch 5 Echtzeit Evaluation bezieht seine Daten auch aus 0V6
 
 Auch sind einige der Datensätze nicht miteinander kompatibel, da sich die Bezeichnungen der Sensoren bezüglich der Benutzung von Umlauten verändert haben.
