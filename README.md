@@ -4,7 +4,7 @@ MoNet ist die Trainingsumgebung für TensorFlow Modelle auf Basis der MoRec App.
 
 Nachdem man mit MoRec Daten aufgezeichnet und Exportiert hat, kann man in wenigen Schritten ein Modell aus den Daten trainieren.
 1. kopiere den Ordner der Sitzung vom Android Telefon nach Data/ExportedData/
-2. Starte die Vorverarbeitung mit Py -3.8 ./PreprocessData.py
+2. Starte die Vorverarbeitung mit Py -3.8 ./Preprocess.py
 3. Gib einen Suffix für die Vorverarbeitungsmethode an, falls diese Verändert wurde.
 4. Starte das Training des Neuronalen Netzes Py -3.8 ./TrainModel.py
 5. Gib den Namen für den Trainingsdatensatz an. Der Setzt sich aus [Sitzungsname]_[Preprocess-Suffix] zusammen.
