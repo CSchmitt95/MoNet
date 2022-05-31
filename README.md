@@ -34,3 +34,12 @@ Eine kurze Übersicht:
 - Versuch 5 Echtzeit Evaluation bezieht seine Daten auch aus 0V6
 
 Auch sind einige der Datensätze nicht miteinander kompatibel, da sich die Bezeichnungen der Sensoren bezüglich der Benutzung von Umlauten verändert haben.
+
+In diesem Repository werden die Trainingsdaten nicht getrackt, da sie zu viel Platz wegnehmen.
+Um sie wieder herzustellen muss das Preprocess.py Skript ausgeführt werden.
+Je nach suffix müssen dafür gewissen Teile des Skripts auskommentiert werden.
+
+- "DiffNull"  - Kein Auskommentieren nötig
+- "NoDiffNull" - Zeilen 80-81 müssen auskommentiert werden.
+- "DiffNoNull" - Zeilen 108-113 müssen auskommentiert werden.
+- "NoDiffNoNull" - Zeilen 80-81 und 108-113 müssen auskommentiert werden.
