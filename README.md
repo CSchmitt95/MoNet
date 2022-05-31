@@ -22,10 +22,15 @@ Das Trainierte Modell kann mit jedem vorverarbeiteten Datensatz evaluiert werden
 Im Ordner EvaluationResults/[Sitzungsname]_[Preprocess-Suffix]_[Training-Suffix]/[Sitzungsname_Testset]_[Preprocess-Suffix]/ liegen nun die Ergebnisse der Evaluation.
 Für jedes Modell wird eine Konfusionsmatrix in einer CSV Datei erstellt.
 
-
-
 Achtung:
 Die Datensätze mit den Namen 0VX enthalten die Daten für die Finalen Versuche.
-Aber da für die Präsentation der Ergebnisse die Reihenfolge der Versuche verändert wurde und auch manche Ergebnisse aufgeteilt wurden, darf man nicht von der Versuchnummer aus der Arbeit auf den Namen in diesem Repository schließen.
+Aber da für die Präsentation der Ergebnisse die Reihenfolge der Versuche verändert wurde und auch manche Ergebnisse aufgeteilt wurden, darf man nicht von der Versuchsnummer aus der Arbeit auf den Namen in diesem Repository schließen.
 
-Auch sind einige der Datensätze nicht miteinenader Kompatibel, da sich die Bezeichnungen der Sensoren bezüglich der Benutzung von Umlauten verändert haben.
+Eine kurze Übersicht: 
+Versuch 1 Laufzeit und Versuch 5 Echtzeit-Laufzeit beziehen ihre daten aus 0V2
+Versuch 2 Speicherauslastung bezieht seine Daten aus 0V1
+Versuch 3 Vorverarbeitung bezieht seine daten aus 0V5
+Versuch 4 Sensorposition bezieht seine daten aus 0V6
+Versuch 5 Echtzeit Evaluation bezieht seine Daten auch aus 0V6
+
+Auch sind einige der Datensätze nicht miteinander kompatibel, da sich die Bezeichnungen der Sensoren bezüglich der Benutzung von Umlauten verändert haben.
