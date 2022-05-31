@@ -43,3 +43,8 @@ Je nach suffix müssen dafür gewissen Teile des Skripts auskommentiert werden.
 - "NoDiffNull" - Zeilen 80-81 müssen auskommentiert werden.
 - "DiffNoNull" - Zeilen 108-113 müssen auskommentiert werden.
 - "NoDiffNoNull" - Zeilen 80-81 und 108-113 müssen auskommentiert werden.
+
+
+Um die Skripte auszuführen wird python3 mit den Bibliotheken aus der requirements.txt benötigt.
+Die Bibliotheken können mit folgendem Befehl installiert werden:
+python3 -m pip install -r .\reqs.txt
