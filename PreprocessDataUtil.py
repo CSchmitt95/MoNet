@@ -16,11 +16,11 @@ def getWindowsFromLine(line):
     name = line[0]
     pure_data = line[3:]
     i = 0
-    while i < (len(pure_data) - PreprocessingConstants.SAMPLES_PER_WINDOW*PreprocessingConstants.QUATERNIONS_PER_SAMPLE):
+    while i < (len(pure_data) - PreprocessingConstants.SAMPLES_PER_WINDOW*PreprocessingConstants.FLOATS_PER_QUATERNION):
         new = []
         new.append(name)
-        new.extend(pure_data[i:i+PreprocessingConstants.SAMPLES_PER_WINDOW*PreprocessingConstants.QUATERNIONS_PER_SAMPLE])
-        i = i+PreprocessingConstants.QUATERNIONS_PER_SAMPLE
+        new.extend(pure_data[i:i+PreprocessingConstants.SAMPLES_PER_WINDOW*PreprocessingConstants.FLOATS_PER_QUATERNION])
+        i = i+PreprocessingConstants.FLOATS_PER_QUATERNION
         windows.append(new)
         #print("Fenstergröße ist: " + str(len(new)))
     return windows

@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import VisualizationUtil
 
-DATA_PATH = "Data/TrainingData/"
+DATA_PATH = "Data/PreprocessedData/"
 
 for filename in os.listdir(DATA_PATH):
     if filename.endswith(".csv"):
